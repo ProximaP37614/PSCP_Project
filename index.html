@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="mx-48 gap-4 mt-24">
+        <div>
+            <p class="text-5xl font-bold">Electricity Bill Calculator</p>
+        </div>
+        <div class="pt-6">
+          <button id="run" type="button" pys-onClick="count" onclick="reverse_add()" class="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full">Calculate</button>
+          <button id="add_device" type="button" pys-onClick="add_device" onclick="add_more()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Add more Electricity+</button>
+          <button id="remove_device" onclick="delete_row()" pys-onClick="remove_device" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Delete</button>
+        </div>
+        <div class="mt-8 flex">
+          <div class="w-7/12">
+            <div class="flex">
+              <p>Current devices: </p>
+              <p id="currentDevices">1</p>
+            </div>
+          <form id="device_form" class="space-y-4 ">
+            <div id="row1" class="border-solid border-2 border-slate-100 rounded-lg p-8 space-y-4">
+              <p class="font-semibold">Device number 1</p>
+              <div class="flex">
+
+                <div class="w-8/12 space-y-4">
+                  <div class="space-y-1 flex flex-col justify-center items-center">
+                    <p>Device's Name</p>
+                    <input class="shadow appearance-none border rounded-full w-3/4 h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name1" type="text">
+                  </div>
+                  <div class="space-y-1 flex flex-col justify-center items-center">
+                    <p>Device's Wattage</p>
+                    <input class="shadow appearance-none border rounded-full w-3/4 h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="wattage1" type="text">
+                  </div>
+                  <div class="space-y-1 flex flex-col justify-center items-center">
+                    <p>Hours of use per day</p>
+                    <input class="shadow appearance-none border rounded-full w-3/4 h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="H_per_day1" type="text">
+                  </div>
+                  <div class="space-y-1 flex flex-col justify-center items-center">
+                    <p>Number of Devices</p>
+                    <input class="shadow appearance-none border rounded-full w-3/4 h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="num_of_device1" type="text">
+                  </div>
+                  <div class="space-y-1 flex">
+                    <p class="flex justify-center items-center text-sm">Desired price (per month) </p>
+                    <input class="ml-2 shadow appearance-none border rounded-full w-1/2 h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="ds1" type="text">
+                  </div>
+                  <div class="space-y-1 flex flex-col">
+                    <p>Recommended hours of use per day : </p>
+                    <p id="rechour1"></p>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <div class="flex justify-center items-center">
+                    <div class="w-28 h-28 rounded-full border-8 inline-flex items-center justify-center border-blue-500 text-gray-700"> 
+                      <div>
+                        <p class="flex items-center justify-center text-xs">cost per day</p>
+                        <p id="circleday1" class="flex items-center justify-center text-sm"></p>
+                      </div>
+                    </div> 
+                  </div>
+
+                  <div class="flex justify-center items-center">
+                    <div class="w-28 h-28 rounded-full border-8 inline-flex items-center justify-center border-blue-600 text-gray-700"> 
+                      <div>
+                        <p class="flex items-center justify-center text-xs">cost per month</p>
+                        <p id="circlemonth1" class="flex items-center justify-center text-sm"></p>
+                      </div>
+                    </div> 
+                  </div>
+
+                  <div class="flex justify-center items-center">
+                    <div class="w-28 h-28 rounded-full border-8 inline-flex items-center justify-center border-blue-700 text-gray-700"> 
+                      <div>
+                        <p class="flex items-center justify-center text-xs">cost per year</p>
+                        <p id="circleyear1" class="flex items-center justify-center text-sm"></p>
+                      </div>
+                    </div> 
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </form>
+          </div>
+            <div class="ml-12">
+                <p class="text-xl font-bold">Your Bill Estimation</p>
+                <div class="flex">
+                  <p>Electricity cost per day:</p>
+                  <p id="costperday" class="pl-2"></p>
+                </div>
+                <div class="flex">
+                  <p>Electricity cost per month:</p>
+                  <p id="costpermonth" class="pl-2"></p>
+                </div>
+                <div class="flex">
+                  <p>Electricity cost per year:</p>
+                  <p id="costperyear" class="pl-2"></p>
+                </div>
+                <p class="text-xl font-bold mt-6">Reversed bill price</p>
+                <div class="flex items-center">
+                  <p class="text-sm">Desired total price (per month)</p>
+                  <input class="ml-2 shadow appearance-none border rounded-full w-1/3 h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="dss1" type="text">
+                  <button id="cal_avg" pys-onClick="cal_avg" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Calculate</button>
+                </div>
+                <form id="device_form2" class="space-y-4 mt-6">
+                  <div class="flex" id="secrow1">
+                    <p>Device 1 recommended hours of use per day : </p>
+                    <p id="reversebill1" class="ml-2"></p>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+        
+    </body>
+    <script src="script.js"></script>
+    <py-script>
+      
+      count_device = 1
+      lencount = 0
+      current_device = Element("currentDevices")
+      output_day = Element("costperday")
+      output_month = Element("costpermonth")
+      output_year = Element("costperyear")
+
+      circle_day = Element("circleday1")
+      circle_month = Element("circlemonth1")
+      circle_year = Element("circleyear1")
+
+
+      async def add_device(*args, **kwargs):
+        global count_device
+        count_device += 1
+        current_device.write(count_device)
+      
+      async def remove_device(*args, **kwargs):
+        global count_device
+        if count_device > 1:
+          count_device -= 1
+          current_device.write(count_device)
+      
+      async def count(*args, **kwargs):
+        global count_device
+        global lencount
+        lencount = 0
+        for i in range(1,count_device+1):
+          
+          input_wat = Element("wattage"+str(i))
+          input_hour = Element("H_per_day"+str(i))
+          input_num = Element("num_of_device"+str(i))
+          input_rec = Element("ds"+str(i))
+
+          circle_day = Element("circleday"+str(i))
+          circle_month = Element("circlemonth"+str(i))
+          circle_year = Element("circleyear"+str(i))
+          output_rec = Element("rechour"+str(i))
+
+          just_count = (int(input_wat.value)*float(input_hour.value)*int(input_num.value))/1000
+          lencount += (int(input_wat.value)*float(input_hour.value)*int(input_num.value))/1000
+
+          circle_day.write(round(just_count,3))
+          circle_month.write(round(just_count*30,3))
+          circle_year.write(round(just_count*30*12,3))
+
+          if input_rec.value != '':
+            if int(input_rec.value) < float(just_count*30):
+              percent = float(input_rec.value)/(just_count*30)
+              output_rec.write(round(float(input_hour.value)*percent,2))
+
+        count_month = lencount*30
+        count_year = count_month*12
+
+        output_day.write(round(lencount,3))
+        output_month.write(round(count_month,3))
+        output_year.write(round(count_year,3))
+
+      async def cal_avg(*args, **kwargs):
+        global count_device
+        global lencount
+        input_avg = Element("dss1") 
+        for i in range(1,count_device+1):
+          input_hour2 = Element("H_per_day"+str(i))
+
+          pc = float(input_avg.value)/float(lencount*30)
+
+          reversebill = Element("reversebill"+str(i))
+          reversebill.write(round(float(input_hour2.value)*pc,2))
+
+      </py-script>    
+    </html>
