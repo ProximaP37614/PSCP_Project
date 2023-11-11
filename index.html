@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Electricity Bill Calculator</title>
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
     <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,7 @@
         </div>
         <div class="pt-6">
           <button id="run" type="button" pys-onClick="count" onclick="reverse_add()" class="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full">Calculate</button>
-          <button id="add_device" type="button" pys-onClick="add_device" onclick="add_more()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Add more Electricity+</button>
+          <button id="add_device" type="button" pys-onClick="add_device" onclick="add_more()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Add more Device+</button>
           <button id="remove_device" onclick="delete_row()" pys-onClick="remove_device" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Delete</button>
         </div>
         <div class="mt-8 flex">
@@ -104,7 +104,7 @@
                   <p>Electricity cost per year:</p>
                   <p id="costperyear" class="pl-2"></p>
                 </div>
-                <p class="text-xl font-bold mt-6">Reversed bill price</p>
+                <p class="text-xl font-bold mt-6">Your Desired Bill Price</p>
                 <div class="flex items-center">
                   <p class="text-sm">Desired total price (per month)</p>
                   <input class="ml-2 shadow appearance-none border rounded-full w-1/3 h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="dss1" type="text">
