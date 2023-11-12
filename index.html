@@ -125,7 +125,7 @@
     <py-script>
       
       count_device = 1
-      lencount = 0
+      totalcount = 0
       current_device = Element("currentDevices")
       output_day = Element("costperday")
       output_month = Element("costpermonth")
@@ -149,10 +149,9 @@
       
       async def count(*args, **kwargs):
         global count_device
-        global lencount
-        lencount = 0
+        global totalcount
+        totalcount = 0
         for i in range(1,count_device+1):
-          
           input_wat = Element("wattage"+str(i))
           input_hour = Element("H_per_day"+str(i))
           input_num = Element("num_of_device"+str(i))
@@ -163,36 +162,137 @@
           circle_year = Element("circleyear"+str(i))
           output_rec = Element("rechour"+str(i))
 
-          just_count = (int(input_wat.value)*float(input_hour.value)*int(input_num.value))/1000
-          lencount += (int(input_wat.value)*float(input_hour.value)*int(input_num.value))/1000
+          just_count = ((float(input_wat.value)*float(input_hour.value)*int(input_num.value))/1000)*30
 
-          circle_day.write(round(just_count,3))
-          circle_month.write(round(just_count*30,3))
-          circle_year.write(round(just_count*30*12,3))
+          totalcount += just_count
+          all_bill = totalcount
+
+          if all_bill <= 150:
+            if all_bill >= 0 and all_bill <= 15:
+              all_bill = all_bill*2.3488
+            elif all_bill > 15 and all_bill <= 25:
+              all_bill = (15 * 2.3488) + ((all_bill-15)*2.9882)
+            elif all_bill > 25 and all_bill <= 35:
+              all_bill = (15 * 2.3488) + (10*2.9882) + ((all_bill-25)*3.2405)
+            elif all_bill > 35 and all_bill <= 100:
+              all_bill = (15 * 2.3488) + (10*2.9882) + (10*3.2405) + ((all_bill-35)*3.6237)
+            elif all_bill > 100 and all_bill <= 150:
+              all_bill = (15 * 2.3488) + (10*2.9882) + (10*3.2405) + (65*3.6237) + ((all_bill-100)*3.7171)
+          else:
+            if all_bill > 150 and all_bill <= 400:
+              all_bill = (150 * 3.2484) + ((all_bill-150)*4.2218)
+            elif all_bill > 400:
+              all_bill = (150 * 3.2484) + (250*4.2218) + ((all_bill-400)*4.4217)
+
+          if just_count <= 150:
+            if just_count >= 0 and just_count <= 15:
+              just_count = just_count*2.3488
+            elif just_count > 15 and just_count <= 25:
+              just_count = (15 * 2.3488) + ((just_count-15)*2.9882)
+            elif just_count > 25 and just_count <= 35:
+              just_count = (15 * 2.3488) + (10*2.9882) + ((just_count-25)*3.2405)
+            elif just_count > 35 and just_count <= 100:
+              just_count = (15 * 2.3488) + (10*2.9882) + (10*3.2405) + ((just_count-35)*3.6237)
+            elif just_count > 100 and just_count <= 150:
+              just_count = (15 * 2.3488) + (10*2.9882) + (10*3.2405) + (65*3.6237) + ((just_count-100)*3.7171)
+          else:
+            if just_count > 150 and just_count <= 400:
+              just_count = (150 * 3.2484) + ((just_count-150)*4.2218)
+            elif just_count > 400:
+              just_count = (150 * 3.2484) + (250*4.2218) + ((just_count-400)*4.4217)
+
+          circle_day.write(round(just_count/30,3))
+          circle_month.write(round(just_count,3))
+          circle_year.write(round(just_count*12,3))
+
+          output_day.write(round(all_bill/30,3))
+          output_month.write(round(all_bill,3))
+          output_year.write(round(all_bill*12,3))
 
           if input_rec.value != '':
-            if int(input_rec.value) < float(just_count*30):
-              percent = float(input_rec.value)/(just_count*30)
-              output_rec.write(round(float(input_hour.value)*percent,2))
+            ec_per_unit = float(input_rec.value)
+            if ec_per_unit <= 35.232:
+              rg = 0
+              rps = 2.3488
+              tu = 0
+            elif ec_per_unit <= 65.114:
+              rg = 35.232
+              rps = 2.9882
+              tu = 15
+            elif ec_per_unit <= 97.519:
+              rg = 65.114
+              rps = 3.2405
+              tu = 25
+            elif ec_per_unit <= 333.0595:
+              rg = 97.519
+              rps = 3.6237
+              tu = 35
+            elif ec_per_unit <= 518.9145:
+              rg = 333.0595
+              rps = 3.7171
+              tu = 100
+            elif ec_per_unit <= 1542.71:
+              rg = 487.26
+              rps = 4.2218
+              tu = 150
+            else:
+              rg = 1542.71
+              rps = 4.4217
+              tu = 400
 
-        count_month = lencount*30
-        count_year = count_month*12
+            epc = ((ec_per_unit-rg)/rps)+tu
 
-        output_day.write(round(lencount,3))
-        output_month.write(round(count_month,3))
-        output_year.write(round(count_year,3))
+            rec_hour = (epc*1000)/(float(input_wat.value)*int(input_num.value)*30)
+            output_rec.write(round(rec_hour,3))
 
       async def cal_avg(*args, **kwargs):
         global count_device
-        global lencount
-        input_avg = Element("dss1") 
+        global totalcount
+        input_avg = Element("dss1")
         for i in range(1,count_device+1):
           input_hour2 = Element("H_per_day"+str(i))
+          input_wat = Element("wattage"+str(i))
+          input_num = Element("num_of_device"+str(i))
 
-          pc = float(input_avg.value)/float(lencount*30)
+          if input_avg.value != '':
+            ec_per_unit = float(input_avg.value)
+            if ec_per_unit <= 35.232:
+              rg = 0
+              rps = 2.3488
+              tu = 0
+            elif ec_per_unit <= 65.114:
+              rg = 35.232
+              rps = 2.9882
+              tu = 15
+            elif ec_per_unit <= 97.519:
+              rg = 65.114
+              rps = 3.2405
+              tu = 25
+            elif ec_per_unit <= 333.0595:
+              rg = 97.519
+              rps = 3.6237
+              tu = 35
+            elif ec_per_unit <= 518.9145:
+              rg = 333.0595
+              rps = 3.7171
+              tu = 100
+            elif ec_per_unit <= 1542.71:
+              rg = 487.26
+              rps = 4.2218
+              tu = 150
+            else:
+              rg = 1542.71
+              rps = 4.4217
+              tu = 400
+  
+            epc = (((ec_per_unit-rg)/rps)+tu)
+            device_unit = ((float(input_wat.value)*float(input_hour2.value)*int(input_num.value))/1000)*30
+  
+            rec_hour = ((device_unit/totalcount)*(epc*1000))/(float(input_wat.value)*int(input_num.value)*30)
 
           reversebill = Element("reversebill"+str(i))
-          reversebill.write(round(float(input_hour2.value)*pc,2))
+          reversebill.write(round(rec_hour,3))
 
-      </py-script>    
-    </html>
+      </py-script>
+    </html>#   P S C P _ P r o j e c t  
+ 
